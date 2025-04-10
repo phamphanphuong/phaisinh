@@ -40,7 +40,7 @@
   </style>
 </head>
 <body>
-  <h1>📊 Trading Bot Dashboard (Realtime)</h1>
+<h1>📊 Trading Bot</h1>
 
   <div class="card">
     <h2>
@@ -71,7 +71,7 @@
 
   <div class="card">
     <h2>Trạng thái</h2>
-    <div id="status">Chờ kết nối WebSocket...</div>
+    <div id="status">Chờ kết nối auto bot...</div>
   </div>
 
   <script>
@@ -80,7 +80,7 @@
     const socket = new WebSocket(socketUrl);
 
     socket.onopen = () => {
-      document.getElementById("status").innerText = "🔗 Đã kết nối WebSocket";
+      doc        t.getElementById("status"            rText = "🔗 Đã kết nối auto bot";
     };
 
     socket.onmessage = function(event) {
@@ -118,11 +118,11 @@
     };
 
     socket.onerror = () => {
-      document.getElementById("status").innerText = "❌ Lỗi WebSocket";
+      do        nt.getElementById("status"            rText = "❌ Lỗi auto bot";
     };
 
     socket.onclose = () => {
-      document.getElementById("status").innerText = "🔌 WebSocket đã đóng";
+      do        nt.getElementById("status"            rText = "🔌 auto bot đã đóng";
     };
 
     function manualUpdate() {
