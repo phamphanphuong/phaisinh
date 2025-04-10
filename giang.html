@@ -2,7 +2,7 @@
 <html lang="vi">
   <head>
     <meta charset="UTF-8" />
-    <title>Trading Bot</title>
+    <title>Giang</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <style>
       :root {
@@ -131,7 +131,7 @@
   </head>
 
   <body>
-    <h1>📊 Trading Bot</h1>
+    <h1>📊 Giang Bot</h1>
 
     <div class="card">
       <h2>
@@ -147,7 +147,7 @@
         <table id="positionsTable">
           <thead>
             <tr>
-              <th>Bot</th>
+              <th>Symbol</th>
               <th>Buy</th>
               <th>Sell</th>
             </tr>
@@ -163,7 +163,7 @@
         <table id="ordersTable">
           <thead>
             <tr>
-              <th>Bot</th>
+              <th>Symbol</th>
               <th>Buy</th>
               <th>Sell</th>
             </tr>
@@ -183,6 +183,7 @@
       const socket = new WebSocket(socketUrl);
 
       socket.onopen = () => {
+        socket.send("giang");
         const statusElement = document.getElementById("status");
         if (statusElement) {
           statusElement.innerText = "🔗 Đã kết nối auto bot";
@@ -207,7 +208,7 @@
 
       function updateUI(data) {
         document.getElementById("balance").innerText =
-          data.balance.toLocaleString() + " VND";
+          (data.balance / 1_000_000).toFixed(1) + " tr";
         document.getElementById("status").innerText = data.status;
 
         const posBody = document.querySelector("#positionsTable tbody");
@@ -243,7 +244,7 @@
       }
 
       function manualUpdate() {
-        fetch("https://web-production-6872a.up.railway.app/status")
+        fetch("https://web-production-6872a.up.railway.app/status/giang")
           .then((res) => res.json())
           .then((data) => {
             updateUI(data);
