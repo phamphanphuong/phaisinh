@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="vi">
+
 <head>
   <meta charset="UTF-8">
   <title>Trading Bot</title>
@@ -11,52 +12,74 @@
       padding: 1rem;
       background: #f4f4f4;
     }
-    h1, h2 {
+
+    h1,
+    h2 {
       color: #333;
     }
+
     .card {
       background: white;
       padding: 1rem;
       margin-bottom: 1rem;
       border-radius: 8px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-      overflow-x: auto; /* Cho phép cuộn ngang trên mobile */
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+      overflow-x: auto;
+      /* Cho phép cuộn ngang trên mobile */
     }
+
     table {
       width: 100%;
       border-collapse: collapse;
-      min-width: 400px; /* Giữ bảng không bị dọc */
+      min-width: 400px;
+      /* Giữ bảng không bị dọc */
     }
-    th, td {
+
+    th,
+    td {
       padding: 0.5rem;
       border: 1px solid #ddd;
       text-align: center;
     }
+
     th {
       background-color: #f0f0f0;
     }
-    tr.green { background-color: #e0f8e0; }
-    tr.red   { background-color: #ffe5e5; }
+
+    tr.green {
+      background-color: #e0f8e0;
+    }
+
+    tr.red {
+      background-color: #ffe5e5;
+    }
   </style>
 </head>
+
 <body>
-<h1>📊 Trading Bot</h1>
+  <h1>📊 Trading Bot</h1>
 
   <div class="card">
     <h2>
-      Số dư 
+      Số dư
       <button onclick="manualUpdate()" style="margin-left: 10px; font-size: 0.8em; padding: 5px 10px;">
         🔄 Cập nhật ngay
       </button>
     </h2>
     <div id="balance">Đang tải...</div>
   </div>
-  
+
 
   <div class="card">
     <h2>Positions</h2>
     <table id="positionsTable">
-      <thead><tr><th>Bot</th><th>Buy</th><th>Sell</th></tr></thead>
+      <thead>
+        <tr>
+          <th>Bot</th>
+          <th>Buy</th>
+          <th>Sell</th>
+        </tr>
+      </thead>
       <tbody></tbody>
     </table>
   </div>
@@ -64,7 +87,13 @@
   <div class="card">
     <h2>Orders</h2>
     <table id="ordersTable">
-      <thead><tr><th>Bot</th><th>Buy</th><th>Sell</th></tr></thead>
+      <thead>
+        <tr>
+          <th>Bot</th>
+          <th>Buy</th>
+          <th>Sell</th>
+        </tr>
+      </thead>
       <tbody></tbody>
     </table>
   </div>
@@ -75,15 +104,19 @@
   </div>
 
   <script>
-    socketUrl = "wss://web-production-6872a.up.railway.app/ws"
-    // "ws://localhost:8000/ws" // Dùng cho local
+    const socketUrl = "wss://web-production-6872a.up.railway.app/ws";
     const socket = new WebSocket(socketUrl);
 
     socket.onopen = () => {
-      doc        t.getElementById("status"            rText = "🔗 Đã kết nối auto bot";
+      const statusElement = document.getElementById("status");
+      if (statusElement) {
+        statusElement.innerText = "🔗 auto bot";
+      } else {
+        console.error("Element with ID 'status' not found in the DOM.");
+      }
     };
 
-    socket.onmessage = function(event) {
+    socket.onmessage = function (event) {
       const data = JSON.parse(event.data);
       document.getElementById("balance").innerText = data.balance.toLocaleString() + " VND";
       document.getElementById("status").innerText = data.status;
@@ -101,43 +134,43 @@
         const ordClass = ord.buy > ord.sell ? "green" : ord.sell > ord.buy ? "red" : "";
 
         posBody.innerHTML += `
-          <tr class="${posClass}">
-            <td>${bot}</td>
-            <td>${pos.buy}</td>
-            <td>${pos.sell}</td>
-          </tr>
-        `;
+        <tr class="${posClass}">
+          <td>${bot}</td>
+          <td>${pos.buy}</td>
+          <td>${pos.sell}</td>
+        </tr>
+      `;
+
         ordBody.innerHTML += `
-          <tr class="${ordClass}">
-            <td>${bot}</td>
-            <td>${ord.buy}</td>
-            <td>${ord.sell}</td>
-          </tr>
-        `;
+        <tr class="${ordClass}">
+          <td>${bot}</td>
+          <td>${ord.buy}</td>
+          <td>${ord.sell}</td>
+        </tr>
+      `;
       }
     };
 
     socket.onerror = () => {
-      do        nt.getElementById("status"            rText = "❌ Lỗi auto bot";
+      document.getElementById("status").innerText = "❌ Lỗi auto bot";
     };
 
     socket.onclose = () => {
-      do        nt.getElementById("status"            rText = "🔌 auto bot đã đóng";
+      document.getElementById("status").innerText = "🔌 auto bot đã đóng";
     };
 
     function manualUpdate() {
-    // Ở đây bạn có thể thực hiện bất kỳ hành động nào
-    // Ví dụ: gọi lại API truyền thống (GET /status) để test
-    fetch("http://localhost:8000/status")
+      fetch("https://web-production-6872a.up.railway.app/status")
         .then(res => res.json())
         .then(data => {
-        alert("Số dư hiện tại: " + data.balance.toLocaleString() + " VND");
+          alert("Số dư hiện tại: " + data.balance.toLocaleString() + " VND");
         })
         .catch(() => {
-        alert("Lỗi khi gọi GET /status");
+          alert("Lỗi khi gọi GET /status");
         });
     }
-
   </script>
+
 </body>
+
 </html>
