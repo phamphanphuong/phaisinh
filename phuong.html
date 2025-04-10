@@ -1,183 +1,174 @@
 <!DOCTYPE html>
 <html lang="vi">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Trading Bot</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <style>
-      body {
-        font-family: Arial, sans-serif;
-        margin: 0;
-        padding: 1rem;
-        background: #f4f4f4;
-      }
+<head>
+  <meta charset="UTF-8" />
+  <title>Trading Bot</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 1rem;
+      background: #f4f4f4;
+    }
 
-      h1,
-      h2 {
-        color: #333;
-      }
+    h1, h2 {
+      color: #333;
+    }
 
-      .card {
-        background: white;
-        padding: 1rem;
-        margin-bottom: 1rem;
-        border-radius: 8px;
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-        overflow-x: auto;
-        /* Cho phép cuộn ngang trên mobile */
-      }
+    .card {
+      background: white;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    }
 
-      table {
-        width: 100%;
-        border-collapse: collapse;
-        min-width: 400px;
-        /* Giữ bảng không bị dọc */
-      }
+    .table-wrapper {
+      overflow-x: auto;
+      width: 100%;
+    }
 
-      th,
-      td {
-        padding: 0.5rem;
-        border: 1px solid #ddd;
-        text-align: center;
-      }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 400px;
+    }
 
-      th {
-        background-color: #f0f0f0;
-      }
+    th, td {
+      padding: 0.5rem;
+      border: 1px solid #ddd;
+      text-align: center;
+    }
 
-      tr.green {
-        background-color: #e0f8e0;
-      }
+    th {
+      background-color: #f0f0f0;
+    }
 
-      tr.red {
-        background-color: #ffe5e5;
-      }
-    </style>
-  </head>
+    tr.green {
+      background-color: #e0f8e0;
+    }
 
-  <body>
-    <h1>📊 Trading Bot</h1>
+    tr.red {
+      background-color: #ffe5e5;
+    }
+  </style>
+</head>
 
-    <div class="card">
-      <h2>
-        Số dư
-        <button
-          onclick="manualUpdate()"
-          style="margin-left: 10px; font-size: 0.8em; padding: 5px 10px"
-        >
-          🔄 Cập nhật ngay
-        </button>
-      </h2>
-      <div id="balance">Đang tải...</div>
-    </div>
+<body>
+  <h1>📊 Trading Bot</h1>
 
-    <div class="card">
-      <h2>Positions</h2>
+  <div class="card">
+    <h2>
+      Số dư
+      <button
+        onclick="manualUpdate()"
+        style="margin-left: 10px; font-size: 0.8em; padding: 5px 10px"
+      >
+        🔄 Cập nhật ngay
+      </button>
+    </h2>
+    <div id="balance">Đang tải...</div>
+  </div>
+
+  <div class="card">
+    <h2>Positions</h2>
+    <div class="table-wrapper">
       <table id="positionsTable">
         <thead>
-          <tr>
-            <th>Bot</th>
-            <th>Buy</th>
-            <th>Sell</th>
-          </tr>
+          <tr><th>Bot</th><th>Buy</th><th>Sell</th></tr>
         </thead>
         <tbody></tbody>
       </table>
     </div>
+  </div>
 
-    <div class="card">
-      <h2>Orders</h2>
+  <div class="card">
+    <h2>Orders</h2>
+    <div class="table-wrapper">
       <table id="ordersTable">
         <thead>
-          <tr>
-            <th>Bot</th>
-            <th>Buy</th>
-            <th>Sell</th>
-          </tr>
+          <tr><th>Bot</th><th>Buy</th><th>Sell</th></tr>
         </thead>
         <tbody></tbody>
       </table>
     </div>
+  </div>
 
-    <div class="card">
-      <h2>Trạng thái</h2>
-      <div id="status">Chờ kết nối auto bot...</div>
-    </div>
+  <div class="card">
+    <h2>Trạng thái</h2>
+    <div id="status">Chờ kết nối auto bot...</div>
+  </div>
 
-    <script>
-      const socketUrl = "wss://web-production-6872a.up.railway.app/ws";
-      const socket = new WebSocket(socketUrl);
+  <script>
+    const socketUrl = "wss://web-production-6872a.up.railway.app/ws";
+    const socket = new WebSocket(socketUrl);
 
-      socket.onopen = () => {
-        const statusElement = document.getElementById("status");
-        if (statusElement) {
-          statusElement.innerText = "🔗 Đã kết nối auto bot";
-        } else {
-          console.error("Element with ID 'status' not found in the DOM.");
-        }
-      };
-
-      socket.onmessage = function (event) {
-        const data = JSON.parse(event.data);
-        updateUI(data);
-      };
-
-      socket.onerror = () => {
-        document.getElementById("status").innerText = "❌ Lỗi kết nối auto bot";
-      };
-
-      socket.onclose = () => {
-        document.getElementById("status").innerText =
-          "🔌 Kết nối với auto bot đã đóng";
-      };
-
-      function updateUI(data) {
-        document.getElementById("balance").innerText =
-          data.balance.toLocaleString() + " VND";
-        document.getElementById("status").innerText = data.status;
-
-        const posBody = document.querySelector("#positionsTable tbody");
-        const ordBody = document.querySelector("#ordersTable tbody");
-        posBody.innerHTML = "";
-        ordBody.innerHTML = "";
-
-        for (const bot in data.positions) {
-          const pos = data.positions[bot];
-          const ord = data.orders[bot];
-
-          const posClass =
-            pos.buy > pos.sell ? "green" : pos.sell > pos.buy ? "red" : "";
-          const ordClass =
-            ord.buy > ord.sell ? "green" : ord.sell > ord.buy ? "red" : "";
-
-          posBody.innerHTML += `
-      <tr class="${posClass}">
-        <td>${bot}</td>
-        <td>${pos.buy}</td>
-        <td>${pos.sell}</td>
-      </tr>
-    `;
-
-          ordBody.innerHTML += `
-      <tr class="${ordClass}">
-        <td>${bot}</td>
-        <td>${ord.buy}</td>
-        <td>${ord.sell}</td>
-      </tr>
-    `;
-        }
+    socket.onopen = () => {
+      const statusElement = document.getElementById("status");
+      if (statusElement) {
+        statusElement.innerText = "🔗 Đã kết nối auto bot";
       }
+    };
 
-      function manualUpdate() {
-        fetch("https://web-production-6872a.up.railway.app/status")
-          .then((res) => res.json())
-          .then((data) => {
-            updateUI(data); // 👈 Gọi lại hàm dùng chung
-          })
-          .catch(() => {
-            alert("Lỗi khi gọi GET /status");
-          });
+    socket.onmessage = function (event) {
+      const data = JSON.parse(event.data);
+      updateUI(data);
+    };
+
+    socket.onerror = () => {
+      document.getElementById("status").innerText = "❌ Lỗi kết nối auto bot";
+    };
+
+    socket.onclose = () => {
+      document.getElementById("status").innerText =
+        "🔌 Kết nối với auto bot đã đóng";
+    };
+
+    function updateUI(data) {
+      document.getElementById("balance").innerText =
+        data.balance.toLocaleString() + " VND";
+      document.getElementById("status").innerText = data.status;
+
+      const posBody = document.querySelector("#positionsTable tbody");
+      const ordBody = document.querySelector("#ordersTable tbody");
+      posBody.innerHTML = "";
+      ordBody.innerHTML = "";
+
+      for (const bot in data.positions) {
+        const pos = data.positions[bot];
+        const ord = data.orders[bot];
+
+        const posClass = pos.buy > pos.sell ? "green" : pos.sell > pos.buy ? "red" : "";
+        const ordClass = ord.buy > ord.sell ? "green" : ord.sell > ord.buy ? "red" : "";
+
+        posBody.innerHTML += `
+          <tr class="${posClass}">
+            <td>${bot}</td>
+            <td>${pos.buy}</td>
+            <td>${pos.sell}</td>
+          </tr>
+        `;
+        ordBody.innerHTML += `
+          <tr class="${ordClass}">
+            <td>${bot}</td>
+            <td>${ord.buy}</td>
+            <td>${ord.sell}</td>
+          </tr>
+        `;
       }
-    </script>
-  </body>
+    }
+
+    function manualUpdate() {
+      fetch("https://web-production-6872a.up.railway.app/status")
+        .then((res) => res.json())
+        .then((data) => {
+          updateUI(data);
+        })
+        .catch(() => {
+          alert("Lỗi khi gọi GET /status");
+        });
+    }
+  </script>
+</body>
 </html>
