@@ -5,129 +5,139 @@
     <title>Phương</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <style>
-      :root {
-        --primary: #2962ff; /* Xanh dương đậm - màu chính của TradingView */
-        --bg: #131722; /* Xám đậm - nền chính */
-        --card-bg: #1c2535; /* Xám đậm hơn - nền card */
-        --text: #d1d4dc; /* Trắng xám - chữ chính */
-        --text-muted: #787b86; /* Xám nhạt - chữ phụ */
-        --border: #2a2e39; /* Viền xám đậm */
-        --green: #00c087; /* Xanh lá - tăng trưởng */
-        --red: #ff3366; /* Đỏ - giảm */
-      }
-
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
-
-      body {
-        font-family: "Segoe UI", Arial, sans-serif;
-        background: var(--bg);
-        color: var(--text);
-        padding: 1rem;
-        line-height: 1.6;
-      }
-
-      h1 {
-        font-size: 1.5rem;
-        margin-bottom: 1.5rem;
-        text-align: center;
-        color: var(--primary);
-      }
-
-      h2 {
-        font-size: 1.2rem;
-        margin-bottom: 0.8rem;
-        color: var(--text);
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-      }
-
-      .card {
-        background: var(--card-bg);
-        padding: 1rem;
-        margin-bottom: 1rem;
-        border-radius: 8px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-        border: 1px solid var(--border);
-      }
-
-      .table-wrapper {
-        width: 100%;
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-      }
-
-      table {
-        width: 100%;
-        border-collapse: collapse;
-        table-layout: auto;
-        font-size: 0.9rem;
-      }
-
-      th,
-      td {
-        padding: 0.75rem 1rem;
-        border: 1px solid var(--border);
-        text-align: center;
-        white-space: nowrap;
-      }
-
-      th {
-        background: var(--card-bg);
-        color: var(--text-muted);
-        font-weight: 500;
-        text-transform: uppercase;
-        font-size: 0.8rem;
-      }
-
-      tr.green {
-        background-color: rgba(0, 192, 135, 0.15); /* Xanh lá nhạt */
-      }
-
-      tr.red {
-        background-color: rgba(255, 51, 102, 0.15); /* Đỏ nhạt */
-      }
-
-      button {
-        background: var(--primary);
-        color: #ffffff;
-        border: none;
-        padding: 0.4rem 0.8rem;
-        border-radius: 4px;
-        cursor: pointer;
-        font-size: 0.9rem;
-        transition: background 0.2s ease;
-      }
-
-      button:hover {
-        background: #1a4ed8; /* Xanh dương đậm hơn khi hover */
-      }
-
-      #balance {
-        font-size: 1.2rem;
-        color: var(--primary);
-        font-weight: 500;
-      }
-
-      #status {
-        font-size: 0.9rem;
-        color: var(--text-muted);
-        text-align: center;
-      }
-
-      /* Responsive adjustments */
-      @media (max-width: 600px) {
+        :root {
+          --primary: #2962ff;
+          --bg: #131722;
+          --card-bg: #1c2535;
+          --text: #d1d4dc;
+          --text-muted: #787b86;
+          --border: #2a2e39;
+          --green: #00c087;
+          --red: #ff3366;
+        }
+  
+        * {
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
+        }
+  
+        body {
+          font-family: 'Segoe UI', Arial, sans-serif;
+          background: var(--bg);
+          color: var(--text);
+          padding: 1rem;
+          line-height: 1.6;
+        }
+  
+        h1 {
+          font-size: 1.5rem;
+          margin-bottom: 1.5rem;
+          text-align: center;
+          color: var(--primary);
+        }
+  
+        h2 {
+          font-size: 1.2rem;
+          margin-bottom: 0.8rem;
+          color: var(--text);
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+        }
+  
+        .card {
+          background: var(--card-bg);
+          padding: 1rem;
+          margin-bottom: 1rem;
+          border-radius: 8px;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+          border: 1px solid var(--border);
+        }
+  
+        .table-wrapper {
+          width: 100%;
+          overflow-x: auto;
+          -webkit-overflow-scrolling: touch;
+        }
+  
+        table {
+          width: 100%;
+          border-collapse: collapse;
+          table-layout: auto;
+        }
+  
         th,
         td {
-          padding: 0.5rem;
-          min-width: 90px;
+          padding: 1rem;
+          border: 1px solid var(--border);
+          text-align: center;
+          white-space: nowrap;
         }
-      }
-    </style>
+  
+        th {
+          background: var(--card-bg);
+          color: var(--text-muted);
+          font-weight: 500;
+          text-transform: uppercase;
+          font-size: 1rem; /* Tăng lên 16px cho tiêu đề */
+        }
+  
+        td {
+          font-size: 1.5rem; /* Tăng lên 24px cho dữ liệu, lớn nhất hợp lý */
+          font-weight: 600; /* Đậm hơn để nổi bật */
+        }
+  
+        tr.green {
+          background-color: rgba(0, 192, 135, 0.15);
+        }
+  
+        tr.red {
+          background-color: rgba(255, 51, 102, 0.15);
+        }
+  
+        button {
+          background: var(--primary);
+          color: #ffffff;
+          border: none;
+          padding: 0.4rem 0.8rem;
+          border-radius: 4px;
+          cursor: pointer;
+          font-size: 0.9rem;
+          transition: background 0.2s ease;
+        }
+  
+        button:hover {
+          background: #1a4ed8;
+        }
+  
+        #balance {
+          font-size: 1.2rem;
+          color: var(--primary);
+          font-weight: 500;
+        }
+  
+        #status {
+          font-size: 0.9rem;
+          color: var(--text-muted);
+          text-align: center;
+        }
+  
+        /* Responsive adjustments */
+        @media (max-width: 600px) {
+          th,
+          td {
+            padding: 0.5rem;
+            min-width: 90px;
+          }
+          td {
+            font-size: 1.2rem; /* Giảm nhẹ trên mobile để vừa màn hình */
+          }
+          th {
+            font-size: 0.9rem; /* Giảm nhẹ trên mobile */
+          }
+        }
+      </style>
   </head>
 
   <body>
